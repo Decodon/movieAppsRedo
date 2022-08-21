@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import React from "react";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
@@ -16,23 +17,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = (props ) => {
+const Header = (props) => {
+  const navigate = useNavigate();
   const classes = useStyles();
-  const title = props.title
+  const title = props.title;
   return (
     <Paper component="div" className={classes.root}>
-      <IconButton
-        aria-label="go back"
-      >
+      <IconButton aria-label="go back" onClick={() => navigate(-1)}>
         <ArrowBackIcon color="primary" fontSize="large" />
       </IconButton>
 
       <Typography variant="h4" component="h3">
         {title}
       </Typography>
-      <IconButton
-        aria-label="go forward"
-      >
+      <IconButton aria-label="go forward" onClick={() => navigate(1)}>
         <ArrowForwardIcon color="primary" fontSize="large" />
       </IconButton>
     </Paper>
