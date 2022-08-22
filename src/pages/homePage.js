@@ -1,24 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PageTemplate from "../components/templateMovieListPage";
+import { useQuery } from "react-query";
+import Spinner from "../components/spinner";
 import { getMovies } from "../api/tmdb-api";
 
-const UpcomingMoviesPage = (props) => {
-  const [movies, setMovies] = useState([]);
-  const favourites = movies.filter((m) => m.favourite);
-  localStorage.setItem("favourites", JSON.stringify(favourites));
+const HomePage = (props) => {
+  const { data, error, isLoading, isError } = useQuery("discover", getMovies);
 
-  useEffect(() => {
-    getMovies().then((movies) => {
-      setMovies(movies);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (isError) {
+    return <h1>{error.message}</h1>;
+  }
+  const movies = data.results;
+
+  // These three lines are redundant; we will replace them laterg.
+  const favourites = movies.filter((m) => m.favouurite);
+  localStorage.setItem("favourites", JSON.stringify(favourites));
+  const addToFavourites = (movieId) => true;
 
   return (
     <PageTemplate
       title="Discover Movies"
       movies={movies}
+      selectFavourite={addToFavourites}
     />
   );
 };
-export default UpcomingMoviesPage;
+
+export default HomePage;
